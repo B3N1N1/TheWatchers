@@ -5,6 +5,7 @@ https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwjGr_6Q
 
 # instalação
 De permissão chmod +x para o arquivo de instalação e o execute como root
+Crie uma pasta dentro da pasta hall chamada apks
 
 # como usar
 Depois de instalar digite "hall" em seu terminal
