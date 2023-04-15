@@ -1,0 +1,9 @@
+#!/bin/bash
+if [[ $EUID -ne 0 ]]; then
+   echo "Este script deve ser executado como root" 
+   exit 1
+fi
+chmod +x hall
+cp hall /usr/local/bin/
+echo "O script hall foi instalado com sucesso!
+Agora voce pode colocar 'hall' em seu terminal"
