@@ -5,70 +5,6 @@
 # Olá, meu nome é Henry, tenho 13 anos e desenvolvo em bash script.
 # Hello, my name is Henry, I'm 13 years old and I develop in bash script
 
-if [[ $EUID -ne 0 ]]; then
-   echo "Este script deve ser executado como root" 
-   exit 1
-fi
-if [ ! -f "/usr/local/bin/hall" ]; then
-clear
-  echo -e $RED "A ferramenta ainda não foi instalada. Por favor, execute o script de instalação para instalar a ferramenta."
-  exit 1
-fi
-clear
-if ! which gobuster > /dev/null; then
-    echo "instalando gobuster"
-    sudo apt-get install gobuster
-    else
-    sleep 1
-    echo "gubuster instalado ✔"
-fi
-if ! which nmap > /dev/null; then
-    echo "instalando nmap"
-    sudo apt-get install nmap
-    else
-    sleep 1
-    echo "nmap instalado ✔"
-fi
-if ! which apksigner > /dev/null; then
-    echo "instalando apksigner"
-    sudo apt-get install curl
-    else 
-    sleep 1
-    echo "apksigner instalado ✔"
-fi
-if ! which curl hydra > /dev/null; then
-    echo "instalado hydra"
-    sudo apt-get install hydra
-    else
-    sleep 1
-    echo "hydra instalado ✔"
-fi
-if ! which curl java > /dev/null; then
-    sudo apt-get install java
-    else
-    sleep 1
-    echo "java instalado ✔"
-fi
-if ! which sqlmap > /dev/null; then
-    echo "instalando sqlmap"
-    sudo apt-get install sqlmap
-    else
-    sleep 1
-    echo "sqlmap instalado ✔"
-fi
-if ! which curl msfconsole > /dev/null; then
-    sudo apt-get install metasploit-framework
-    else
-    sleep 1
-    echo "metasploit instalado ✔
-    
-    "
-    sleep 0.8
-    echo -e $RED "Tudo certo"
-    sleep 1.5
-    clear
-fi
-
 green='\e[0;32m'
 RED='\033[31m'
 NC='\033[0m'
@@ -102,6 +38,7 @@ function menu_principal {
   echo "3. Hydra brute force"
   echo "4. Metasploit"
   echo "5. SqlMap"
+  echo "6. Wpscan"
   echo "0. Sair"
 
   read -p "Opção: " opcao
@@ -125,6 +62,9 @@ function menu_principal {
     5)
     clear
       sqlops
+      ;;
+    6)clear
+      wpops
       ;;
     0)
         echo -e "╔──────────────────────────────────────────────╗"
@@ -454,5 +394,68 @@ function sqlops {
             sqlops
             ;;
     esac
+}
+function wpops {
+  echo "         __          _______   _____
+         \ \        / /  __ \ / ____|
+          \ \  /\  / /| |__) | (___   ___  __ _ _ __ ®
+           \ \/  \/ / |  ___/ \___ \ / __|/ _' | '_ \'
+            \  /\  /  | |     ____) | (__| (_| | | | |
+             \/  \/   |_|    |_____/ \___|\__,_|_| |_|
+
+"
+  echo "Menu Wpscan"
+    echo "1. Scan wordpress"
+    echo "2. Enumerate users"
+    echo "3. Scan vuln"
+    echo "0. Voltar"
+read -p "Escolha uma opção: " opcao
+
+    case $opcao in
+        1)
+
+            read -p "Digite a URL a ser Scaneada(inclua http/https): " url
+            wpscan --url $url
+            read -n1 -r -p "Pressione qualquer tecla para continuar..."
+            wpops
+            ;;
+        2)
+
+            read -p "Digite a URL a ser enumarada(inclua http/https): " url
+            wpscan --url $url -e u
+            read -n1 -r -p "Pressione qualquer tecla para continuar..."
+            wpops
+            ;;
+        3)
+          read -p "Digite a URL a ser varrida(inclua http/https): " url
+          echo "voce tem um token de api? (s/n)"
+          read resposta
+
+if [ "$resposta" == "s" ]; then
+  echo "token: "
+  read token
+ sudo wpscan --url $url --api-token $token
+elif [ "$resposta" == "n" ]; then
+xdg-open https://wpscan.com/profile &
+else
+clear
+sleep 1
+  echo "Opção inválida."
+  sleep 1
+  wpops
+  
+fi
+;;
+        0)
+            menu_principal
+            ;;
+        *)
+            echo "Opção inválida, escolha uma opção válida."
+            sleep 1
+            clear
+            wpops
+            ;;
+    esac
+
 }
 menu_principal
