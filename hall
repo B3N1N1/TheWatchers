@@ -60,47 +60,7 @@ read -p "Opção: " opcao
 }
 
 function termux {
-  if ! command -v nmap &> /dev/null
-then
-    echo "O nmap não está instalado. Instalando..."
-    pkg install nmap
-fi
-if ! command -v hydra &> /dev/null
-then
-    echo "O hydra não está instalado. Instalando..."
-    apt install python 
-    apt install php
-    apt install curl
-    apt install wget
-    apt install git
-    apt install nano
-    git clone https://github.com/vanhauser-thc/thc-hydra
-    cd thc-hydra
-    ./configure
-    make
-    make install
-fi
-if ! command -v msfconsole &> /dev/null
-then
-    echo "O metasploit não está instalado. Instalando..."
-    pkg install wget
-    wget https://raw.githubusercontent.com/gushmazuko/metasploit_in_termux/master/metasploit.sh
-    chmod +x metasploit.sh
-    ./metasploit.sh
-fi
-if ! command -v wpscan &> /dev/null
-then
-    echo "O wpscan não está instalado. Instalando..."
-    pkg install ruby clang make pkg-config ruby-dev libffi-dev zlib-dev libcurl
-    gem install wpscan
-fi
-if ! command -v sqlmap &> /dev/null
-then
-    echo "O sqlmap não está instalado. Instalando..."
-    pkg install sqlmap
-    echo 'export PATH=$PATH:/data/data/com.termux/files/home/.sqlmap' >> ~/.bashrc
-    source ~/.bashrc
-fi
+
 
 
   clear
