@@ -10,4 +10,4 @@ Crie uma pasta dentro da pasta hall chamada apks
 # Como usar
 Depois de instalar digite "hall" em seu terminal
 # Creditos
-B3N1N1 - Hysec
+B3N1N1 - TheWatchers
