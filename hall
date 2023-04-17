@@ -65,21 +65,28 @@ then
     echo "O nmap não está instalado. Instalando..."
     pkg install nmap
 fi
-if ! command -v gobuster &> /dev/null
-then
-    echo "O gobuster não está instalado. Instalando..."
-    pkg install gobuster
-fi
 if ! command -v hydra &> /dev/null
 then
     echo "O hydra não está instalado. Instalando..."
-    pkg install hydra
+    apt install python 
+    apt install php
+    apt install curl
+    apt install wget
+    apt install git
+    apt install nano
+    git clone https://github.com/vanhauser-thc/thc-hydra
+    cd thc-hydra
+    ./configure
+    make
+    make install
 fi
 if ! command -v msfconsole &> /dev/null
 then
     echo "O metasploit não está instalado. Instalando..."
-    pkg install unstable-repo
-    pkg install metasploit
+    pkg install wget
+    wget https://raw.githubusercontent.com/gushmazuko/metasploit_in_termux/master/metasploit.sh
+    chmod +x metasploit.sh
+    ./metasploit.sh
 fi
 if ! command -v wpscan &> /dev/null
 then
@@ -242,9 +249,9 @@ HHHH     HHHH        TTTT            TTTT        PPP           ///
 HHHH     HHHH        TTTT            TTTT        PPP          ///
 HHHH     HHHH        TTTT            TTTT        PPP         ///
 "
-    echo -n "Qual site ou aplicação? (inclua http/https): "
+    echo -n "Qual site ou aplicação? (https://exemplo.com/): "
     read dir
-    gobuster dir -u $dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -x php,hmtl,txt
+    python /home/$USER/hall/Breacher/breacher.py -u $dir
     echo "Você deseja continuar? (s/n)"
 read resposta
 
