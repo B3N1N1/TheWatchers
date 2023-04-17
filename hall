@@ -80,7 +80,7 @@ function menu_principal {
     
   echo "Selecione uma opção:"
   echo "1. Escanear portas"
-  echo "2. Diretórios Gobuster"
+  echo "2. Brute force diretórios"
   echo "3. Hydra brute force"
   echo "4. Metasploit"
   echo "5. SqlMap"
@@ -176,7 +176,7 @@ function simple_scan {
   clear
   echo "Escaneando o ip $ip"
   sleep 1
-  nmap -sS $ip
+  nmap $ip
   escanear_portas
 }
 function agressive_scan {
@@ -211,7 +211,7 @@ HHHH     HHHH        TTTT            TTTT        PPP         ///
 "
     echo -n "Qual site ou aplicação? (https://exemplo.com/): "
     read dir
-    python Breacher/breacher.py -u $dir
+    python tools/Breacher/breacher.py -u $dir
     echo "Você deseja continuar? (s/n)"
 read resposta
 
