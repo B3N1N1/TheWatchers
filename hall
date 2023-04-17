@@ -251,7 +251,7 @@ HHHH     HHHH        TTTT            TTTT        PPP         ///
 "
     echo -n "Qual site ou aplicação? (https://exemplo.com/): "
     read dir
-    python /home/$USER/hall/Breacher/breacher.py -u $dir
+    python Breacher/breacher.py -u $dir
     echo "Você deseja continuar? (s/n)"
 read resposta
 
